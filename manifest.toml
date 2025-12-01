@@ -2,16 +2,18 @@
 # You typically do not need to edit this file
 
 packages = [
-  { name = "advent", version = "1.0.0", build_tools = ["gleam"], requirements = ["exception", "filepath", "gleam_community_ansi", "gleam_erlang", "gleam_stdlib", "gleam_time", "global_value", "logging", "simplifile", "string_width"], source = "git", repo = "git@github.com:giacomocavalieri/advent.git", commit = "63b30a11181fbbee9692eedb2a686f40f4373d20" },
+  { name = "advent", version = "1.0.0", build_tools = ["gleam"], requirements = ["exception", "filepath", "gleam_community_ansi", "gleam_erlang", "gleam_stdlib", "gleam_time", "global_value", "logging", "simplifile", "string_width"], source = "git", repo = "https://github.com/giacomocavalieri/advent.git", commit = "1d85f0ea00b994e73030055c6bd6a953c22c272c" },
   { name = "exception", version = "2.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "exception", source = "hex", outer_checksum = "329D269D5C2A314F7364BD2711372B6F2C58FA6F39981572E5CA68624D291F8C" },
   { name = "filepath", version = "1.1.2", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "filepath", source = "hex", outer_checksum = "B06A9AF0BF10E51401D64B98E4B627F1D2E48C154967DA7AF4D0914780A6D40A" },
   { name = "gleam_community_ansi", version = "1.4.3", build_tools = ["gleam"], requirements = ["gleam_community_colour", "gleam_regexp", "gleam_stdlib"], otp_app = "gleam_community_ansi", source = "hex", outer_checksum = "8A62AE9CC6EA65BEA630D95016D6C07E4F9973565FA3D0DE68DC4200D8E0DD27" },
   { name = "gleam_community_colour", version = "2.0.2", build_tools = ["gleam"], requirements = ["gleam_json", "gleam_stdlib"], otp_app = "gleam_community_colour", source = "hex", outer_checksum = "E34DD2C896AC3792151EDA939DA435FF3B69922F33415ED3C4406C932FBE9634" },
+  { name = "gleam_community_maths", version = "2.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "gleam_yielder"], otp_app = "gleam_community_maths", source = "hex", outer_checksum = "C9EFF6BCF3C9D113EF9837655B0128CA8CAC295131E9F3468F93C1D78EC3E013" },
   { name = "gleam_erlang", version = "1.3.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_erlang", source = "hex", outer_checksum = "1124AD3AA21143E5AF0FC5CF3D9529F6DB8CA03E43A55711B60B6B7B3874375C" },
   { name = "gleam_json", version = "3.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_json", source = "hex", outer_checksum = "44FDAA8847BE8FC48CA7A1C089706BD54BADCC4C45B237A992EDDF9F2CDB2836" },
   { name = "gleam_regexp", version = "1.1.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_regexp", source = "hex", outer_checksum = "9C215C6CA84A5B35BB934A9B61A9A306EC743153BE2B0425A0D032E477B062A9" },
   { name = "gleam_stdlib", version = "0.67.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "6368313DB35963DC02F677A513BB0D95D58A34ED0A9436C8116820BF94BE3511" },
   { name = "gleam_time", version = "1.6.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_time", source = "hex", outer_checksum = "0DF3834D20193F0A38D0EB21F0A78D48F2EC276C285969131B86DF8D4EF9E762" },
+  { name = "gleam_yielder", version = "1.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_yielder", source = "hex", outer_checksum = "8E4E4ECFA7982859F430C57F549200C7749823C106759F4A19A78AEA6687717A" },
   { name = "gleeunit", version = "1.9.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "DA9553CE58B67924B3C631F96FE3370C49EB6D6DC6B384EC4862CC4AAA718F3C" },
   { name = "global_value", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "global_value", source = "hex", outer_checksum = "23F74C91A7B819C43ABCCBF49DAD5BB8799D81F2A3736BA9A534BD47F309FF4F" },
   { name = "logging", version = "1.3.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "logging", source = "hex", outer_checksum = "1098FBF10B54B44C2C7FDF0B01C1253CAFACDACABEFB4B0D027803246753E06D" },
@@ -20,6 +22,7 @@ packages = [
 ]
 
 [requirements]
-advent = { git = "git@github.com:giacomocavalieri/advent.git", ref = "main" }
+advent = { git = "https://github.com/giacomocavalieri/advent.git", ref = "main" }
+gleam_community_maths = { version = ">= 2.0.0 and < 3.0.0" }
 gleam_stdlib = { version = ">= 0.44.0 and < 2.0.0" }
 gleeunit = { version = ">= 1.0.0 and < 2.0.0" }
