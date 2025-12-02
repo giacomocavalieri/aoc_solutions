@@ -24,3 +24,9 @@ pub fn repeat_test() {
   assert int_extra.repeat(12, times: 3) == 121_212
   assert int_extra.repeat(123, times: 1) == 123
 }
+
+pub fn from_digits_test() {
+  assert int_extra.from_digits([]) == 0
+  assert int_extra.from_digits([1]) == 1
+  assert int_extra.from_digits([1, 2, 3]) == 123
+}

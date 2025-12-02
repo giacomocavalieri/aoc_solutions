@@ -76,3 +76,14 @@ fn repeat_loop(number: Int, digits: Int, acc: Int, times: Int) -> Int {
     }
   }
 }
+
+/// Turns a list of digits into the corresponding number
+///
+/// ```gleam
+/// assert from_digits([1, 2, 3]) == 123
+/// assert from_digits([]) == 0
+/// ```
+///
+pub fn from_digits(digits: List(Int)) -> Int {
+  list.fold(over: digits, from: 0, with: fn(n, digit) { n * 10 + digit })
+}
