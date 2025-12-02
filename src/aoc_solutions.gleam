@@ -7,5 +7,6 @@ pub fn main() -> Nil {
   |> advent.add_day(day_01.day())
   |> advent.add_day(day_02.day())
   |> advent.add_padding_days(up_to: 12)
+  |> advent.show_timings
   |> advent.run
 }
