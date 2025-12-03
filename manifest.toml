@@ -2,7 +2,7 @@
 # You typically do not need to edit this file
 
 packages = [
-  { name = "advent", version = "1.0.0", build_tools = ["gleam"], requirements = ["exception", "filepath", "gleam_community_ansi", "gleam_erlang", "gleam_stdlib", "gleam_time", "global_value", "logging", "simplifile", "string_width"], source = "git", repo = "https://github.com/giacomocavalieri/advent.git", commit = "6af8907ea9a6065c1c3158483681b25b56a57ce5" },
+  { name = "advent", version = "1.0.0", build_tools = ["gleam"], requirements = ["exception", "filepath", "gleam_community_ansi", "gleam_erlang", "gleam_stdlib", "gleam_time", "global_value", "logging", "simplifile", "string_width"], source = "git", repo = "https://github.com/giacomocavalieri/advent.git", commit = "5034b379182c43f7b18892af766be5ef7d48dfbc" },
   { name = "exception", version = "2.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "exception", source = "hex", outer_checksum = "329D269D5C2A314F7364BD2711372B6F2C58FA6F39981572E5CA68624D291F8C" },
   { name = "filepath", version = "1.1.2", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "filepath", source = "hex", outer_checksum = "B06A9AF0BF10E51401D64B98E4B627F1D2E48C154967DA7AF4D0914780A6D40A" },
   { name = "gleam_community_ansi", version = "1.4.3", build_tools = ["gleam"], requirements = ["gleam_community_colour", "gleam_regexp", "gleam_stdlib"], otp_app = "gleam_community_ansi", source = "hex", outer_checksum = "8A62AE9CC6EA65BEA630D95016D6C07E4F9973565FA3D0DE68DC4200D8E0DD27" },
