@@ -4,6 +4,11 @@ import gleam/list
 import gleam/result
 import gleam_community/maths
 
+pub fn expect(number: String) -> Int {
+  let assert Ok(number) = int.parse(number)
+  number
+}
+
 pub fn count_digits(number: Int) -> Int {
   int.absolute_value(number)
   |> int.to_float
