@@ -4,10 +4,12 @@ import aoc_solutions/year_2025/day_02
 import aoc_solutions/year_2025/day_03
 import aoc_solutions/year_2025/day_04
 import aoc_solutions/year_2025/day_05
+import utils/advent_util
 
 pub fn main() -> Nil {
   advent.year(2025)
   |> advent.timed
+  |> advent_util.download_if_token
   |> advent.add_day(day_01.day())
   |> advent.add_day(day_02.day())
   |> advent.add_day(day_03.day())
