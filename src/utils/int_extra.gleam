@@ -88,6 +88,12 @@ pub fn from_digits(digits: List(Int)) -> Int {
   list.fold(over: digits, from: 0, with: fn(n, digit) { n * 10 + digit })
 }
 
+/// Turns a string into a number, panicking if it's not one.
+///
+/// > 💥 This is some really discouraged practice, I'm just doing it for Advent
+/// > of Code because I assume inputs are always right and never deal with
+/// > errors.
+///
 pub fn expect(number: String) -> Int {
   let assert Ok(number) = int.parse(number)
   number

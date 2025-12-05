@@ -54,12 +54,12 @@ fn sum_ranges_loop(ranges: List(Range), previous_end: Int, acc: Int) {
     [Range(from: _, to:), ..rest] if to <= previous_end ->
       sum_ranges_loop(rest, previous_end, acc)
 
-    // .... ]      previous range
+    // ..... ]     previous range
     //   ....... ] new range
     [Range(from:, to:), ..rest] if from <= previous_end ->
       sum_ranges_loop(rest, to, acc + to - previous_end)
 
-    // .... ]           previous range
+    // ..... ]          previous range
     //         [ .... ] new range
     [Range(from:, to:), ..rest] ->
       sum_ranges_loop(rest, to, acc + to - from + 1)
