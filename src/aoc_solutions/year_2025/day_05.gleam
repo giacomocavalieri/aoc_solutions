@@ -24,6 +24,7 @@ pub type Range {
 
 pub fn part_a(input: #(List(Range), List(Int))) -> Int {
   let #(ranges, ingredients) = input
+
   list.count(ingredients, fn(ingredient) {
     list.any(ranges, contains(_, ingredient))
   })

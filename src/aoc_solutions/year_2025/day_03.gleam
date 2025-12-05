@@ -79,13 +79,8 @@ fn max_battery_loop(
 fn parse(input: String) -> List(List(Int)) {
   string.trim(input)
   |> string.split(on: "\n")
-  |> list.map(parse_bank)
-}
-
-fn parse_bank(line: String) -> List(Int) {
-  string.to_graphemes(line)
-  |> list.map(fn(battery) {
-    let assert Ok(battery) = int.parse(battery)
-    battery
+  |> list.map(fn(line) {
+    string.to_graphemes(line)
+    |> list.map(int_extra.expect)
   })
 }

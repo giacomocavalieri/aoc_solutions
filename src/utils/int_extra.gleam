@@ -4,11 +4,6 @@ import gleam/list
 import gleam/result
 import gleam_community/maths
 
-pub fn expect(number: String) -> Int {
-  let assert Ok(number) = int.parse(number)
-  number
-}
-
 pub fn count_digits(number: Int) -> Int {
   int.absolute_value(number)
   |> int.to_float
@@ -91,4 +86,9 @@ fn repeat_loop(number: Int, digits: Int, acc: Int, times: Int) -> Int {
 ///
 pub fn from_digits(digits: List(Int)) -> Int {
   list.fold(over: digits, from: 0, with: fn(n, digit) { n * 10 + digit })
+}
+
+pub fn expect(number: String) -> Int {
+  let assert Ok(number) = int.parse(number)
+  number
 }

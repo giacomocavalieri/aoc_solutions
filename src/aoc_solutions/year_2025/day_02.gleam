@@ -72,8 +72,6 @@ fn parse(input: String) -> List(#(Int, Int)) {
   |> string.split(on: ",")
   |> list.map(fn(range) {
     let assert [min, max] = string.split(range, on: "-")
-    let assert Ok(min) = int.parse(min)
-    let assert Ok(max) = int.parse(max)
-    #(min, max)
+    #(int_extra.expect(min), int_extra.expect(max))
   })
 }

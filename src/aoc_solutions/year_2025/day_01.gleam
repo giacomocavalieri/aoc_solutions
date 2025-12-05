@@ -1,9 +1,8 @@
 import advent
-import gleam/int
 import gleam/list
 import gleam/option
-import gleam/result
 import gleam/string
+import utils/int_extra
 
 pub fn day() {
   advent.Day(
@@ -61,19 +60,13 @@ fn rotate(
 }
 
 fn parse(input: String) -> List(Rotation) {
-  let assert Ok(rotations) =
-    input
-    |> string.trim
-    |> string.split(on: "\n")
-    |> list.try_map(parse_rotation)
-
-  rotations
-}
-
-fn parse_rotation(line: String) -> Result(Rotation, Nil) {
-  case line {
-    "L" <> number -> int.parse(number) |> result.map(Left)
-    "R" <> number -> int.parse(number) |> result.map(Right)
-    _ -> Error(Nil)
-  }
+  string.trim(input)
+  |> string.split(on: "\n")
+  |> list.map(fn(line) {
+    case line {
+      "L" <> number -> Left(int_extra.expect(number))
+      "R" <> number -> Right(int_extra.expect(number))
+      _ -> panic
+    }
+  })
 }
