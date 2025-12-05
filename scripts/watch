@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    YEAR=$(date +%Y)
+else
+    YEAR=$1
+fi
+
+watchexec \
+    --wrap-process=session\
+    --restart\
+    --clear\
+    --quiet\
+    --watch src\
+    --watch inputs\
+    --watch test\
+    --no-project-ignore\
+    -- "gleam run -m year_$YEAR"
