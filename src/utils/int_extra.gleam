@@ -96,5 +96,6 @@ pub fn from_digits(digits: List(Int)) -> Int {
 ///
 pub fn expect(number: String) -> Int {
   let assert Ok(number) = int.parse(number)
+    as { "not a number: \"" <> number <> "\"" }
   number
 }
