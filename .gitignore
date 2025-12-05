@@ -5,3 +5,4 @@ erl_crash.dump
 
 # Remember to never upload your Advent of Code inputs!!
 inputs
+.overrides
