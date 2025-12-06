@@ -52,29 +52,49 @@ fn groups_of_three(in network: Graph(Undirected, String, Nil)) -> Set(List(Int))
 }
 
 fn part_b(network) {
-  let assert [first, ..] =
-    graph.nodes(network)
-    |> list.map(fn(node) { grow_clique(network, network, [node.id]) })
-    |> list.sort(fn(one, other) {
-      int.compare(list.length(other), list.length(one))
-    })
+  let assert [max_clique, ..] =
+    bron_kerbosch(network)
+    |> list.sort(fn(one, other) { int.compare(set.size(other), set.size(one)) })
 
-  list.map(first, fn(id) {
-    let assert Ok(context) = graph.get_context(network, id)
-    context.node.value
+  set.to_list(max_clique)
+  |> list.map(fn(id) {
+    let assert Ok(matched) = graph.get_context(network, id)
+    matched.node.value
   })
   |> list.sort(string.compare)
   |> string.join(with: ",")
 }
 
-fn grow_clique(network, unexplored, clique) {
-  case graph.match_any(unexplored) {
-    Error(_) -> clique
-    Ok(#(matched, unexplored)) ->
-      case list.all(clique, graph.has_edge(network, matched.node.id, _)) {
-        False -> grow_clique(network, unexplored, clique)
-        True -> grow_clique(network, unexplored, [matched.node.id, ..clique])
-      }
+fn bron_kerbosch(g) {
+  let p = graph.nodes(g) |> list.map(fn(node) { node.id }) |> set.from_list
+  bron_kerbosch_loop(g, set.new(), p, set.new())
+}
+
+fn bron_kerbosch_loop(
+  g: Graph(_, _, _),
+  r: Set(Int),
+  p: Set(Int),
+  x: Set(Int),
+) -> List(Set(Int)) {
+  case set.is_empty(p) && set.is_empty(x) {
+    True -> [r]
+    False -> {
+      list.fold(set.to_list(p), #(p, x, []), fn(acc, v) {
+        let #(p, x, acc) = acc
+        let assert Ok(context) = graph.get_context(g, v)
+        let n_v = dict.keys(context.outgoing) |> set.from_list
+
+        let acc =
+          bron_kerbosch_loop(
+            g,
+            set.insert(r, v),
+            set.intersection(p, n_v),
+            set.intersection(x, n_v),
+          )
+          |> list.append(acc)
+        #(set.delete(p, v), set.insert(x, v), acc)
+      }).2
+    }
   }
 }
 
