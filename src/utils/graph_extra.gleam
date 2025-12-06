@@ -1,7 +1,9 @@
 import gleam/dict
 import gleam/int
 import gleam/list
+import gleam/set.{type Set}
 import graph.{type Directed, type Graph, type Node, Context}
+import utils/gb_set.{type GbSet}
 import utils/pairing_heap.{type PairingHeap}
 
 /// Adds a node if not already present.
@@ -206,4 +208,84 @@ fn has_edges(graph: Graph(direction, value, label)) -> Bool {
         !dict.is_empty(incoming) || !dict.is_empty(outgoing)
     }
   })
+}
+
+/// Returns all maximal cliques in the given graph using the Bron–Kerbosch
+/// algorithm.
+///
+/// A maximal clique is a group of nodes where all nodes are connected to each
+/// other in the graph.
+///
+pub fn maximal_cliques(graph: Graph(direction, label, value)) -> List(Set(Int)) {
+  let unexplored =
+    graph.nodes(graph)
+    |> list.map(fn(node) { node.id })
+    |> gb_set.from_list
+
+  maximal_cliques_loop(graph, set.new(), unexplored, gb_set.new())
+}
+
+/// Ritorna tutte le clique composte da:
+/// - `nodes` that are part of the clique
+/// - `unexplored` the nodes that could be added later
+/// - `visited` nodes whose cliques we've already explored (and so we shouldn't
+///   search again)
+///
+/// All nodes in `unexplored` and `visited` are connected to all the nodes in
+/// the clique.
+///
+fn maximal_cliques_loop(
+  graph: Graph(direction, label, value),
+  clique: Set(Int),
+  unexplored: GbSet(Int),
+  visited: GbSet(Int),
+) -> List(Set(Int)) {
+  case gb_set.is_empty(unexplored) {
+    True ->
+      case gb_set.is_empty(visited) {
+        // If the visited set is not empty, that means there's other nodes that
+        // are part of the current clique that we have already explored. So this
+        // clique is not the maximal one.
+        False -> []
+        // Otherwise, it means we've found a maximal clique. There's no other
+        // nodes that are connected to it and don't appear in `clique`.
+        True -> [clique]
+      }
+
+    // Otherwise there's still nodes to explore. We'll keep expanding the
+    // clique one level at a time.
+    False -> maximal_cliques_inner_loop(graph, clique, unexplored, visited, [])
+  }
+}
+
+fn maximal_cliques_inner_loop(
+  graph: Graph(direction, label, value),
+  clique: Set(Int),
+  unexplored: GbSet(Int),
+  visited: GbSet(Int),
+  acc: List(Set(Int)),
+) {
+  // We go over all the unexplored nodes and one by one we add it to the clique,
+  // one by one.
+  case gb_set.next(unexplored) {
+    Error(_) -> acc
+    Ok(#(next, unexplored_rest)) -> {
+      let assert Ok(context) = graph.get_context(graph, next)
+      let reached = dict.keys(context.outgoing) |> gb_set.from_list
+      let acc =
+        maximal_cliques_loop(
+          graph,
+          set.insert(clique, next),
+          // Only keep the nodes that are still fully connected to the clique.
+          gb_set.intersection(reached, unexplored),
+          gb_set.intersection(reached, visited),
+        )
+        |> list.append(acc)
+
+      // We go to the nect node now, keeping track that it's no longer to
+      // explore and it has already been explored.
+      let visited = gb_set.insert(visited, next)
+      maximal_cliques_inner_loop(graph, clique, unexplored_rest, visited, acc)
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import gleam/int
 import gleam/list
 import gleam/order
+import gleam/set
 import graph.{Node}
 import utils/graph_extra
 import utils/list_extra
@@ -85,6 +86,38 @@ pub fn topological_sort_test() {
     |> graph.insert_directed_edge(6, 1, labelled: Nil)
     |> graph.insert_directed_edge(6, 5, labelled: Nil)
     |> graph_extra.topological_sort
+}
+
+pub fn maximal_cliques_test() {
+  assert [
+      [3, 5],
+      [5, 6],
+      [1, 2, 4],
+      [2, 3, 4],
+      [4, 6, 7, 8, 9],
+    ]
+    == graph.new()
+    |> insert_nodes(1, 9)
+    |> graph.insert_undirected_edge(1, 2, labelled: Nil)
+    |> graph.insert_undirected_edge(1, 4, labelled: Nil)
+    |> graph.insert_undirected_edge(2, 3, labelled: Nil)
+    |> graph.insert_undirected_edge(2, 4, labelled: Nil)
+    |> graph.insert_undirected_edge(3, 4, labelled: Nil)
+    |> graph.insert_undirected_edge(3, 5, labelled: Nil)
+    |> graph.insert_undirected_edge(4, 6, labelled: Nil)
+    |> graph.insert_undirected_edge(4, 7, labelled: Nil)
+    |> graph.insert_undirected_edge(4, 8, labelled: Nil)
+    |> graph.insert_undirected_edge(4, 9, labelled: Nil)
+    |> graph.insert_undirected_edge(5, 6, labelled: Nil)
+    |> graph.insert_undirected_edge(6, 7, labelled: Nil)
+    |> graph.insert_undirected_edge(6, 8, labelled: Nil)
+    |> graph.insert_undirected_edge(6, 9, labelled: Nil)
+    |> graph.insert_undirected_edge(7, 8, labelled: Nil)
+    |> graph.insert_undirected_edge(7, 9, labelled: Nil)
+    |> graph.insert_undirected_edge(8, 9, labelled: Nil)
+    |> graph_extra.maximal_cliques
+    |> list.map(set.to_list)
+    |> list.sort(fn(one, other) { list_extra.compare(one, other, int.compare) })
 }
 
 // HELPERS ---------------------------------------------------------------------

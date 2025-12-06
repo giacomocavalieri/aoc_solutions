@@ -1,5 +1,6 @@
 import advent
 import aoc_solutions/year_2024/day_05
+import aoc_solutions/year_2024/day_23
 import utils/advent_util
 
 pub fn main() {
@@ -7,5 +8,6 @@ pub fn main() {
   |> advent.timed
   |> advent_util.download_if_token
   |> advent.add_day(day_05.day())
+  |> advent.add_day(day_23.day())
   |> advent.run
 }
