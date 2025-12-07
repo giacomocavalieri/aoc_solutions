@@ -22,7 +22,7 @@ pub type Rotation {
   Right(Int)
 }
 
-fn part_a(rotations: List(Rotation)) {
+fn part_a(rotations: List(Rotation)) -> Int {
   list.scan(over: rotations, from: 50, with: fn(current_position, rotation) {
     let #(new_position, _zeros) =
       rotate(from: current_position, by: rotation, count: 0)

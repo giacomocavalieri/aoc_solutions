@@ -37,7 +37,7 @@ fn in_ranges(id: Int, ranges: List(Range)) {
   }
 }
 
-pub fn part_b(input: #(List(Range), _)) -> Int {
+pub fn part_b(input: #(List(Range), List(Int))) -> Int {
   let #(ranges, _) = input
   list.fold(over: ranges, from: 0, with: fn(sum, range) {
     sum + range.to - range.from + 1

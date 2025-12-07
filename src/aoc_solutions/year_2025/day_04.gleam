@@ -53,7 +53,7 @@ fn is_reachable_loop(
   }
 }
 
-fn remove_loop(rolls: Set(Point), to_check: List(Point)) {
+fn remove_loop(rolls: Set(Point), to_check: List(Point)) -> Set(Point) {
   case list.filter(to_check, keeping: is_reachable(_, rolls)) {
     [] -> rolls
     [_, ..] as reachable_rolls -> {

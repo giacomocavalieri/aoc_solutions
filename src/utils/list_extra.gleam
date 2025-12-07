@@ -37,6 +37,13 @@ fn compare_loop(one, other, compare, outcome) {
   }
 }
 
+/// Returns the element at the middle of the list.
+///
+/// ```gleam
+/// assert Ok(2) == middle([4, 2, 5])
+/// assert Ok(3) == middle([1, 6, 3, 4])
+/// ```
+///
 pub fn middle(list: List(a)) -> Result(a, Nil) {
   case list {
     [middle] | [_, middle] -> Ok(middle)

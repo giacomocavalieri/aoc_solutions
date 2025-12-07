@@ -16,6 +16,7 @@ pub fn connected_component_test() {
     |> graph.insert_directed_edge(Nil, 4, 5)
     |> graph.insert_directed_edge(Nil, 5, 4)
     |> graph_extra.connected_components
+    |> list.map(set.to_list)
     |> sort_ids
 }
 

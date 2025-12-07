@@ -23,7 +23,7 @@ pub fn day() {
   )
 }
 
-fn part_a(network) {
+fn part_a(network: Graph(Undirected, String, Nil)) -> Int {
   groups_of_three(in: network)
   |> set.size
 }
@@ -51,7 +51,7 @@ fn groups_of_three(in network: Graph(Undirected, String, Nil)) -> Set(List(Int))
   }
 }
 
-fn part_b(network) {
+fn part_b(network: Graph(Undirected, String, Nil)) -> String {
   let assert [max_clique, ..] =
     graph_extra.maximal_cliques(network)
     |> list.sort(fn(one, other) { int.compare(set.size(other), set.size(one)) })

@@ -21,11 +21,11 @@ pub fn insert_node_if_missing(
 /// Adds an edge if one between the two nodes is not already present.
 ///
 pub fn insert_directed_edge_if_missing(
-  graph: Graph(Directed, a, label),
+  graph: Graph(Directed, value, label),
   labelled label: label,
   from one: Int,
   to other: Int,
-) -> Graph(Directed, a, label) {
+) -> Graph(Directed, value, label) {
   case graph.has_edge(graph, from: one, to: other) {
     True -> graph
     False ->
@@ -37,7 +37,7 @@ pub fn insert_directed_edge_if_missing(
 /// a destination in the given grap - if any!
 ///
 pub fn path_with_least_steps(
-  graph: Graph(Directed, a, label),
+  graph: Graph(Directed, value, label),
   from source: Int,
   to destination: Int,
 ) -> Result(List(Int), Nil) {
@@ -51,9 +51,9 @@ pub fn path_with_least_steps(
 /// other using the Dijkstra algorithm.
 ///
 pub fn minimum_path(
-  in graph,
-  from source,
-  to destination,
+  in graph: Graph(direction, value, label),
+  from source: Int,
+  to destination: Int,
   with cost: fn(label) -> Int,
 ) -> Result(#(List(Int), Int), Nil) {
   let paths =
@@ -103,14 +103,14 @@ fn minimum_path_loop(
 ///
 pub fn connected_components(
   graph: Graph(direction, value, label),
-) -> List(List(Int)) {
+) -> List(Set(Int)) {
   connected_components_loop(graph, [])
 }
 
 fn connected_components_loop(
   graph: Graph(direction, value, label),
-  acc: List(List(Int)),
-) -> List(List(Int)) {
+  acc: List(Set(Int)),
+) -> List(Set(Int)) {
   case graph.match_any(graph) {
     Error(_) -> acc
     Ok(#(context, _)) -> {
@@ -124,27 +124,36 @@ fn connected_components_loop(
 fn connected_component(
   from node: Node(value),
   in graph: Graph(direction, value, label),
-) -> #(List(Int), Graph(direction, value, label)) {
-  let reachable_nodes = connected_nodes(from: node.id, in: graph)
+) -> #(Set(Int), Graph(direction, value, label)) {
+  let reachable_nodes =
+    reachable(from: node.id, in: graph)
+    |> set.insert(node.id)
+
   let rest =
-    list.fold(over: reachable_nodes, from: graph, with: graph.remove_node)
+    set.fold(over: reachable_nodes, from: graph, with: graph.remove_node)
 
   #(reachable_nodes, rest)
 }
 
-fn connected_nodes(from node: Int, in graph: Graph(_, _, _)) -> List(Int) {
+/// Returns a list of all the nodes reachable from the given one in the graph.
+///
+pub fn reachable(
+  from node: Int,
+  in graph: Graph(direction, value, label),
+) -> Set(Int) {
   case graph.match(graph, node) {
-    Error(_) -> []
-    Ok(#(first, rest)) ->
-      dict.merge(first.outgoing, first.incoming)
-      |> dict.fold(from: [], with: fn(reachables, neighbour, _) {
-        [connected_nodes(neighbour, rest), ..reachables]
+    Error(_) -> set.new()
+    Ok(#(node, rest)) ->
+      dict.fold(node.outgoing, set.new(), with: fn(reachables, neighbour, _) {
+        reachables
+        |> set.insert(neighbour)
+        |> set.union(reachable(neighbour, rest))
       })
-      |> list.prepend([first.node.id])
-      |> list.flatten
   }
 }
 
+/// Returns a possible topological sort of the graph if it doesn't contain
+/// any cycle.
 ///
 pub fn topological_sort(
   graph: Graph(Directed, value, label),

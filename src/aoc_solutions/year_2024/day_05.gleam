@@ -33,7 +33,7 @@ fn part_a(input: #(List(#(Int, Int)), List(List(Int)))) -> Int {
   }
 }
 
-fn sorted(update: List(Int), according_to rules: List(#(Int, Int))) {
+fn sorted(update: List(Int), according_to rules: List(#(Int, Int))) -> List(Int) {
   let assert Ok(sorted) =
     list.fold(rules, graph.new(), fn(rules, rule) {
       let #(from, to) = rule
@@ -50,7 +50,7 @@ fn sorted(update: List(Int), according_to rules: List(#(Int, Int))) {
   sorted
 }
 
-fn part_b(input: #(List(#(Int, Int)), List(List(Int)))) {
+fn part_b(input: #(List(#(Int, Int)), List(List(Int)))) -> Int {
   let #(rules, updates) = input
   use sum, update <- list.fold(over: updates, from: 0)
   case sorted(update, according_to: rules) {

@@ -46,7 +46,7 @@ fn apply_operations_loop(
   }
 }
 
-fn parse_line_loop(line: String, acc: List(Int)) {
+fn parse_line_loop(line: String, acc: List(Int)) -> List(Int) {
   case string.trim_start(line) {
     "" -> list.reverse(acc)
     line ->
@@ -58,7 +58,7 @@ fn parse_line_loop(line: String, acc: List(Int)) {
   }
 }
 
-fn part_b(input) {
+fn part_b(input: String) -> Int {
   let assert [first, ..rest] =
     string.split(input, on: "\n")
     |> list.map(string.to_graphemes)

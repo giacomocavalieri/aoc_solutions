@@ -18,7 +18,7 @@ pub fn day() {
   )
 }
 
-fn part_a(banks: List(List(Int))) {
+fn part_a(banks: List(List(Int))) -> Int {
   list.fold(over: banks, from: 0, with: fn(total_joltage, bank) {
     let #(b1, rest) = max_battery(from: bank, excluding_last: 1)
     let assert Ok(b2) = list.reduce(rest, with: int.max)

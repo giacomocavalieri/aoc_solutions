@@ -4,6 +4,14 @@ import gleam/list
 import gleam/result
 import gleam_community/maths
 
+/// Returns the number of digits the number is made of.
+///
+/// ```gleam
+/// assert 1 == count_digits(4)
+/// assert 2 == count_digits(11)
+/// assert 3 == count_digits(120)
+/// ```
+///
 pub fn count_digits(number: Int) -> Int {
   int.absolute_value(number)
   |> int.to_float
@@ -14,6 +22,8 @@ pub fn count_digits(number: Int) -> Int {
   |> int.add(1)
 }
 
+/// Returns `base ^ exponent`.
+///
 pub fn power(base: Int, exponent: Int) -> Int {
   let assert Ok(power) = int.power(base, int.to_float(exponent))
   float.truncate(power)
