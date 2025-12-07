@@ -9,9 +9,9 @@ import utils/pairing_heap.{type PairingHeap}
 /// Adds a node if not already present.
 ///
 pub fn insert_node_if_missing(
-  graph: Graph(direction, value, label),
-  node: Node(value),
-) -> Graph(direction, value, label) {
+  graph: Graph(d, n, l),
+  node: Node(n),
+) -> Graph(d, n, l) {
   case graph.has_node(graph, node.id) {
     True -> graph
     False -> graph.insert_node(graph, node)
@@ -37,7 +37,7 @@ pub fn insert_directed_edge_if_missing(
 /// a destination in the given grap - if any!
 ///
 pub fn path_with_least_steps(
-  graph: Graph(Directed, value, label),
+  graph: Graph(d, n, l),
   from source: Int,
   to destination: Int,
 ) -> Result(List(Int), Nil) {
@@ -51,10 +51,10 @@ pub fn path_with_least_steps(
 /// other using the Dijkstra algorithm.
 ///
 pub fn minimum_path(
-  in graph: Graph(direction, value, label),
+  in graph: Graph(d, n, l),
   from source: Int,
   to destination: Int,
-  with cost: fn(label) -> Int,
+  with cost: fn(l) -> Int,
 ) -> Result(#(List(Int), Int), Nil) {
   let paths =
     pairing_heap.new(int.compare)
@@ -63,9 +63,9 @@ pub fn minimum_path(
 }
 
 fn minimum_path_loop(
-  graph: Graph(direction, value, label),
+  graph: Graph(d, n, l),
   destination: Int,
-  cost: fn(label) -> Int,
+  cost: fn(l) -> Int,
   paths: PairingHeap(Int, List(Int)),
 ) -> Result(#(List(Int), Int), Nil) {
   case pairing_heap.split_min(paths) {
@@ -101,14 +101,12 @@ fn minimum_path_loop(
 /// Returns a list with the ids of the nodes making up the connected components
 /// of the graph.
 ///
-pub fn connected_components(
-  graph: Graph(direction, value, label),
-) -> List(Set(Int)) {
+pub fn connected_components(graph: Graph(d, n, l)) -> List(Set(Int)) {
   connected_components_loop(graph, [])
 }
 
 fn connected_components_loop(
-  graph: Graph(direction, value, label),
+  graph: Graph(d, n, l),
   acc: List(Set(Int)),
 ) -> List(Set(Int)) {
   case graph.match_any(graph) {
@@ -123,8 +121,8 @@ fn connected_components_loop(
 
 fn connected_component(
   from node: Node(value),
-  in graph: Graph(direction, value, label),
-) -> #(Set(Int), Graph(direction, value, label)) {
+  in graph: Graph(d, n, l),
+) -> #(Set(Int), Graph(d, n, l)) {
   let reachable_nodes =
     reachable(from: node.id, in: graph)
     |> set.insert(node.id)
@@ -137,10 +135,7 @@ fn connected_component(
 
 /// Returns a list of all the nodes reachable from the given one in the graph.
 ///
-pub fn reachable(
-  from node: Int,
-  in graph: Graph(direction, value, label),
-) -> Set(Int) {
+pub fn reachable(from node: Int, in graph: Graph(d, n, l)) -> Set(Int) {
   case graph.match(graph, node) {
     Error(_) -> set.new()
     Ok(#(node, rest)) ->
@@ -202,14 +197,14 @@ fn topological_sort_loop(
   }
 }
 
-fn has_incoming_edges(graph: Graph(direction, value, label), node: Int) -> Bool {
+fn has_incoming_edges(graph: Graph(d, n, l), node: Int) -> Bool {
   case graph.get_context(graph, node) {
     Error(_) -> False
     Ok(Context(incoming:, ..)) -> !dict.is_empty(incoming)
   }
 }
 
-fn has_edges(graph: Graph(direction, value, label)) -> Bool {
+fn has_edges(graph: Graph(d, n, l)) -> Bool {
   list.any(graph.nodes(graph), fn(node) {
     case graph.get_context(graph, node.id) {
       Error(_) -> False

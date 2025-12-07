@@ -68,8 +68,8 @@ fn loop_b(grid: String, rays: List(Int), new_rays: List(Int)) -> Int {
       loop_b(rest, rays, [n + m, 0, n + o, ..new_rays])
     }
     "." <> rest, [ray, ..rays] -> loop_b(rest, rays, [ray, ..new_rays])
+    "", _ | "\n", _ -> int.sum(new_rays)
     "\n" <> rest, [] -> loop_b(rest, list.reverse(new_rays), [])
-    "", _ -> int.sum(new_rays)
     _, _ -> panic as "unreachable"
   }
 }

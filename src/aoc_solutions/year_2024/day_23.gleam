@@ -1,5 +1,4 @@
 import advent
-import gleam/bit_array
 import gleam/dict
 import gleam/int
 import gleam/list
@@ -8,7 +7,7 @@ import gleam/set.{type Set}
 import gleam/string
 import graph.{type Graph, type Undirected}
 import utils/graph_extra
-import utils/int_extra
+import utils/string_extra
 
 pub fn day() {
   advent.Day(
@@ -69,15 +68,10 @@ fn parse(input: String) -> Graph(Undirected, String, Nil) {
   let lines = string.trim_end(input) |> string.split(on: "\n")
   use graph, line <- list.fold(lines, from: graph.new())
   let assert [one, other] = string.split(line, on: "-")
-  let id_one = name_to_id(one)
-  let id_other = name_to_id(other)
+  let id_one = string_extra.hash(one)
+  let id_other = string_extra.hash(other)
 
   graph_extra.insert_node_if_missing(graph, graph.Node(id_one, one))
   |> graph_extra.insert_node_if_missing(graph.Node(id_other, other))
   |> graph.insert_undirected_edge(Nil, between: id_one, and: id_other)
-}
-
-fn name_to_id(name: String) -> Int {
-  let assert <<one, other>> = bit_array.from_string(name)
-  int_extra.expect(int.to_string(one) <> int.to_string(other))
 }
