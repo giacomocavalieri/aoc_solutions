@@ -4,8 +4,8 @@ import gleam/option
 import gleam/set
 import gleam/string
 import graph.{type Graph, type Undirected, Node}
-import utils/graph_extra
-import utils/int_extra
+import utils/extra/graph_extra
+import utils/extra/int_extra
 
 pub fn day() {
   advent.Day(

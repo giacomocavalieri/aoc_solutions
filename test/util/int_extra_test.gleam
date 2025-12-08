@@ -1,5 +1,5 @@
 import gleam/list
-import utils/int_extra
+import utils/extra/int_extra
 
 pub fn count_digits_test() {
   assert 1 == int_extra.count_digits(0)

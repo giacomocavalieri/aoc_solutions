@@ -3,9 +3,9 @@ import gleam/list
 import gleam/option
 import gleam/string
 import graph.{Node}
-import utils/graph_extra
-import utils/int_extra
-import utils/list_extra
+import utils/extra/graph_extra
+import utils/extra/int_extra
+import utils/extra/list_extra
 
 pub fn day() {
   advent.Day(

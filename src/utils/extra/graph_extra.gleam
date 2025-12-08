@@ -3,8 +3,8 @@ import gleam/int
 import gleam/list
 import gleam/set.{type Set}
 import graph.{type Directed, type Graph, type Node, Context}
-import utils/gb_set.{type GbSet}
-import utils/pairing_heap.{type PairingHeap}
+import utils/structures/gb_set.{type GbSet}
+import utils/structures/pairing_heap.{type PairingHeap}
 
 /// Adds a node if not already present.
 ///

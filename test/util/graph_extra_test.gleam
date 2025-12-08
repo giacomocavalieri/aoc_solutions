@@ -3,8 +3,8 @@ import gleam/list
 import gleam/order
 import gleam/set
 import graph.{Node}
-import utils/graph_extra
-import utils/list_extra
+import utils/extra/graph_extra
+import utils/extra/list_extra
 
 pub fn connected_component_test() {
   assert [[1, 2, 3], [4, 5]]

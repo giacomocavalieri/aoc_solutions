@@ -1,6 +1,6 @@
 import gleam/int
 import gleam/order.{Eq, Gt, Lt}
-import utils/list_extra
+import utils/extra/list_extra
 
 pub fn compare_test() {
   assert Lt == list_extra.compare([], [1, 2], int.compare)

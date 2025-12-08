@@ -4,8 +4,8 @@ import gleam/int
 import gleam/list
 import gleam/option
 import gleam/string
-import utils/dict_extra
-import utils/int_extra
+import utils/extra/dict_extra
+import utils/extra/int_extra
 
 pub fn day() {
   advent.Day(

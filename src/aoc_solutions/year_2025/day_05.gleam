@@ -4,7 +4,7 @@ import gleam/list
 import gleam/option
 import gleam/order.{type Order}
 import gleam/string
-import utils/int_extra
+import utils/extra/int_extra
 
 pub fn day() {
   advent.Day(
