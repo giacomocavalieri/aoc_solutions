@@ -1,11 +1,10 @@
 import advent
-import gleam/dict.{type Dict}
 import gleam/int
 import gleam/list
 import gleam/option
 import gleam/string
-import utils/extra/dict_extra
 import utils/extra/int_extra
+import utils/structures/disjoint_set.{type DisjointSet}
 
 pub fn day() {
   advent.Day(
@@ -25,7 +24,7 @@ pub type Box {
 }
 
 fn part_a(boxes: List(Box)) {
-  let assert Ok(group_size) =
+  let assert Ok(groups) =
     list.combination_pairs(boxes)
     |> list.map(fn(pair) { #(pair.0, pair.1, distance(pair.0, pair.1)) })
     |> list.sort(fn(one, other) { int.compare(one.2, other.2) })
@@ -33,7 +32,7 @@ fn part_a(boxes: List(Box)) {
     |> connect_boxes(boxes)
 
   let assert [a, b, c, ..] =
-    dict.values(group_size)
+    disjoint_set.set_sizes(groups)
     |> list.sort(int.compare)
     |> list.reverse
 
@@ -50,20 +49,6 @@ fn part_b(boxes: List(Box)) -> Int {
   result
 }
 
-pub fn connect_boxes(
-  pairs: List(#(Box, Box, Int)),
-  boxes: List(Box),
-) -> Result(Dict(Int, Int), Int) {
-  let point_group =
-    list.index_fold(over: boxes, from: dict.new(), with: dict.insert)
-  let group_size =
-    list.index_fold(over: boxes, from: dict.new(), with: fn(acc, _, i) {
-      dict.insert(acc, i, 1)
-    })
-
-  connect_boxes_loop(pairs, point_group, group_size)
-}
-
 fn distance(one: Box, other: Box) {
   let dx = one.x - other.x
   let dy = one.y - other.y
@@ -71,37 +56,26 @@ fn distance(one: Box, other: Box) {
   dx * dx + dy * dy + dz * dz
 }
 
+pub fn connect_boxes(
+  pairs: List(#(Box, Box, Int)),
+  boxes: List(Box),
+) -> Result(DisjointSet(Box), Int) {
+  list.fold(over: boxes, from: disjoint_set.new(), with: disjoint_set.insert)
+  |> connect_boxes_loop(pairs, _)
+}
+
 fn connect_boxes_loop(
   pairs: List(#(Box, Box, Int)),
-  point_group: Dict(Box, Int),
-  group_size: Dict(Int, Int),
-) -> Result(Dict(Int, Int), Int) {
+  groups: DisjointSet(Box),
+) -> Result(DisjointSet(Box), Int) {
   case pairs {
-    [] -> Ok(group_size)
+    [] -> Ok(groups)
     [#(one, other, _), ..rest] -> {
-      let assert Ok(group_one) = dict.get(point_group, one)
-      let assert Ok(group_other) = dict.get(point_group, other)
-
-      case group_one == group_other {
-        True -> connect_boxes_loop(rest, point_group, group_size)
-        False -> {
-          let assert Ok(group_one_size) = dict.get(group_size, group_one)
-          let assert Ok(group_other_size) = dict.get(group_size, group_other)
-
-          case group_one_size + group_other_size {
-            1000 -> Error(one.x * other.x)
-            new_size -> {
-              let new_group = int.min(group_one, group_other)
-              let old_group = int.max(group_one, group_other)
-              let point_group =
-                dict_extra.replace_value(point_group, old_group, new_group)
-              let group_size =
-                dict.insert(group_size, new_group, new_size)
-                |> dict.delete(old_group)
-              connect_boxes_loop(rest, point_group, group_size)
-            }
-          }
-        }
+      let groups = disjoint_set.merge(groups, one, other)
+      case disjoint_set.set_size(groups, one) {
+        Error(_) -> panic as "unreachable"
+        Ok(#(1000, _)) -> Error(one.x * other.x)
+        Ok(#(_, set)) -> connect_boxes_loop(rest, set)
       }
     }
   }
