@@ -1,3 +1,4 @@
+import gleam/list
 import gleam/order.{type Order, Eq, Gt, Lt}
 
 /// Compares two lists. Longer lists are always `Gt`, while shorter lists are
@@ -62,4 +63,15 @@ fn middle_loop(slow: List(a), fast: List(a)) {
     [], [_, _, ..] -> panic
     [_, ..slow], [_, _, ..fast] -> middle_loop(slow, fast)
   }
+}
+
+/// Returns the maximum item in the list, according to the comparison function.
+///
+pub fn max(list: List(a), by compare: fn(a, a) -> Order) -> Result(a, Nil) {
+  list.reduce(list, fn(one, other) {
+    case compare(one, other) {
+      Eq | Gt -> one
+      Lt -> other
+    }
+  })
 }
