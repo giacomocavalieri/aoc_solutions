@@ -18,6 +18,10 @@ advent = { git = "https://github.com/giacomocavalieri/advent.git", ref = "main" 
 graph = { git = "https://github.com/giacomocavalieri/graph.git", ref = "main" }
 gleam_community_maths = ">= 2.0.0 and < 3.0.0"
 envoy = ">= 1.1.0 and < 2.0.0"
+iv = ">= 1.3.3 and < 2.0.0"
+temporary = ">= 1.0.0 and < 2.0.0"
+shellout = ">= 1.7.0 and < 2.0.0"
+simplifile = ">= 2.3.1 and < 3.0.0"
 
 [dev-dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"
