@@ -9,6 +9,7 @@ import aoc_solutions/year_2025/day_07
 import aoc_solutions/year_2025/day_08
 import aoc_solutions/year_2025/day_09
 import aoc_solutions/year_2025/day_10
+import aoc_solutions/year_2025/day_11
 import utils/advent_util
 
 pub fn main() -> Nil {
@@ -23,8 +24,9 @@ pub fn main() -> Nil {
   |> advent.add_day(day_07.day())
   |> advent.add_day(day_08.day())
   |> advent.add_day(day_09.day())
-  |> advent.timed
   |> advent.add_day(day_10.day())
+  |> advent.timed
+  |> advent.add_day(day_11.day())
   |> advent.add_padding_days(up_to: 12)
   |> advent.run
 }
