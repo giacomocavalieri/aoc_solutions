@@ -23,12 +23,19 @@ pub type Rotation {
 }
 
 fn part_a(rotations: List(Rotation)) -> Int {
-  list.scan(over: rotations, from: 50, with: fn(current_position, rotation) {
-    let #(new_position, _zeros) =
-      rotate(from: current_position, by: rotation, count: 0)
-    new_position
-  })
-  |> list.count(fn(position) { position == 0 })
+  let #(_final_position, zeros) =
+    list.fold(over: rotations, from: #(50, 0), with: fn(acc, rotation) {
+      let #(current_position, zeros_so_far) = acc
+      let #(new_position, _zeros) =
+        rotate(from: current_position, by: rotation, count: 0)
+
+      case new_position {
+        0 -> #(new_position, zeros_so_far + 1)
+        _ -> #(new_position, zeros_so_far)
+      }
+    })
+
+  zeros
 }
 
 fn part_b(rotations: List(Rotation)) -> Int {
@@ -49,8 +56,7 @@ fn rotate(
   case rotation {
     Left(0) -> #(current, zeros)
     Left(turns) if current == 0 -> rotate(99, Left(turns - 1), zeros)
-    Left(turns) if current == 1 ->
-      rotate(current - 1, Left(turns - 1), zeros + 1)
+    Left(turns) if current == 1 -> rotate(0, Left(turns - 1), zeros + 1)
     Left(turns) -> rotate(current - 1, Left(turns - 1), zeros)
 
     Right(0) -> #(current, zeros)
