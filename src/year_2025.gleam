@@ -16,8 +16,8 @@ import utils/advent_util
 pub fn main() -> Nil {
   advent.year(2025)
   |> advent_util.download_if_token
-  |> advent.sequential
   |> advent.timed
+  |> advent.with_timeout(seconds: 15)
   |> advent.add_day(day_01.day())
   |> advent.add_day(day_02.day())
   |> advent.add_day(day_03.day())

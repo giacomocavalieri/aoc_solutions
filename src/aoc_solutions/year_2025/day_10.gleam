@@ -1,13 +1,14 @@
 import advent
+import gleam/bool
+import gleam/dict
 import gleam/int
 import gleam/list
 import gleam/option.{Some}
 import gleam/set.{type Set}
 import gleam/string
-import shellout
-import simplifile.{type FileError}
-import temporary
 import utils/extra/int_extra
+import utils/extra/list_extra
+import utils/matrix
 import utils/structures/pairing_heap.{type PairingHeap}
 
 pub fn day() {
@@ -67,63 +68,68 @@ fn button_to_int(button: List(Int)) -> Int {
   })
 }
 
-fn part_b(_machines: List(Machine)) {
+fn part_b(machines: List(Machine)) {
   // This would be called with the input's list of machines, not an empty list.
   // However, the solution requires spawning a process that calls z3 I don't
   // like doing that on repeat when watching solutions so I've commented this
   // out.
   //
   // I hate hate hate hate hate hate this solution.
-  let _ =
-    list.fold(over: [], from: 0, with: fn(sum, machine) {
-      let assert Ok(steps) = solve(machine)
-      sum + steps
-    })
 
-  19_293
+  list.fold(over: machines, from: 0, with: fn(sum, machine) {
+    sum + solve(machine)
+  })
+  //19_293
 }
 
-fn solve(machine: Machine) -> Result(Int, FileError) {
-  // We have a variable for each button.
-  let buttons =
-    list.index_map(machine.buttons, fn(_button, i) { "x" <> int.to_string(i) })
+fn solve(machine: Machine) -> Int {
+  let matrix =
+    machine_to_equations(machine)
+    |> matrix.new
+    |> matrix.gauss
 
-  let sums =
-    list.index_map(machine.joltage_requirements, fn(required, index) {
-      let required = int.to_string(required)
-      let buttons =
-        list.zip(machine.buttons, buttons)
-        |> list.filter(fn(pair) { list.contains(pair.0, index) })
-        |> list.map(fn(pair) { pair.1 })
+  let total_buttons = list.length(machine.buttons)
+  let free_buttons =
+    matrix.diagonal(matrix)
+    |> list.take(total_buttons)
+    |> list_extra.pad_end(up_to: total_buttons, with: 0)
+    |> list.index_fold([], fn(acc, diagonal_value, index) {
+      use <- bool.guard(when: diagonal_value != 0, return: acc)
+      let assert Ok(button) = list_extra.at(machine.buttons, index)
+      let assert Ok(upper_bound) =
+        list.filter_map(button, list_extra.at(machine.joltage_requirements, _))
+        |> list.reduce(int.min)
 
-      case buttons {
-        [] -> "(assert (= " <> required <> " 0))"
-        [_, ..] -> {
-          let buttons = string.join(buttons, with: " ")
-          "(assert (= " <> required <> " (+ " <> buttons <> ")))"
-        }
+      [#(index, upper_bound), ..acc]
+    })
+    |> list.reverse
+
+  let assert Ok(steps) =
+    list.map(free_buttons, fn(pair) {
+      let #(index, upper_bound) = pair
+      list.range(0, upper_bound)
+      |> list.map(fn(value) { #(index, value) })
+    })
+    |> list_extra.cross_product
+    |> list.map(dict.from_list)
+    |> list.filter_map(matrix.solve_system(matrix, _))
+    |> list.map(fn(presses) { dict.values(presses) |> int.sum })
+    |> list.reduce(int.min)
+
+  steps
+}
+
+fn machine_to_equations(machine: Machine) -> List(List(Int)) {
+  let Machine(indicator_lights: _, buttons:, joltage_requirements:) = machine
+  list.index_map(joltage_requirements, fn(joltage, i) {
+    list.map(buttons, fn(button) {
+      case list.contains(button, i) {
+        True -> 1
+        False -> 0
       }
     })
-
-  let program =
-    [
-      ["(set-logic LIA)", "(set-option :produce-models true)"],
-      // We declare a variable for each button, then require they're all >= 0.
-      list.map(buttons, fn(button) { "(declare-const " <> button <> " Int)" }),
-      list.map(buttons, fn(button) { "(assert (>= " <> button <> " 0))" }),
-      sums,
-      // Our goal is to minimise the number of presses.
-      ["(minimize (+ " <> string.join(buttons, with: " ") <> "))"],
-      ["(check-sat)", "(get-objectives)", "(exit)"],
-    ]
-    |> list.flatten
-    |> string.join(with: "\n")
-
-  use file <- temporary.create(temporary.file())
-  let assert Ok(_) = simplifile.write(program, to: file)
-  let assert Ok(output) = shellout.command("z3", with: [file], in: ".", opt: [])
-  let assert [_, " " <> n, ..] = string.split(output, ")")
-  int_extra.expect(n)
+    |> list.append([joltage])
+  })
 }
 
 pub type Machine {
