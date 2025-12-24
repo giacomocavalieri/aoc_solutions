@@ -1,6 +1,7 @@
 import advent
 import gleam/bool
 import gleam/dict
+import gleam/erlang/process.{type Subject}
 import gleam/int
 import gleam/list
 import gleam/option.{Some}
@@ -8,7 +9,7 @@ import gleam/set.{type Set}
 import gleam/string
 import utils/extra/int_extra
 import utils/extra/list_extra
-import utils/matrix
+import utils/structures/matrix
 import utils/structures/pairing_heap.{type PairingHeap}
 
 pub fn day() {
@@ -68,18 +69,23 @@ fn button_to_int(button: List(Int)) -> Int {
   })
 }
 
-fn part_b(machines: List(Machine)) {
-  // This would be called with the input's list of machines, not an empty list.
-  // However, the solution requires spawning a process that calls z3 I don't
-  // like doing that on repeat when watching solutions so I've commented this
-  // out.
-  //
-  // I hate hate hate hate hate hate this solution.
-
-  list.fold(over: machines, from: 0, with: fn(sum, machine) {
-    sum + solve(machine)
+fn part_b(machines: List(Machine)) -> Int {
+  let me = process.new_subject()
+  list.each(machines, fn(machine) {
+    process.spawn(fn() { process.send(me, solve(machine)) })
   })
-  //19_293
+
+  part_b_loop(me, list.length(machines), 0)
+}
+
+fn part_b_loop(me: Subject(Int), missing: Int, acc: Int) -> Int {
+  case missing {
+    0 -> acc
+    _ -> {
+      let steps = process.receive_forever(me)
+      part_b_loop(me, missing - 1, acc + steps)
+    }
+  }
 }
 
 fn solve(machine: Machine) -> Int {
